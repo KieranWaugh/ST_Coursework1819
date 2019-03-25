@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.omg.IOP.MultipleComponentProfileHelper;
 
 import st.Parser;
 
@@ -19,7 +20,7 @@ public class Task1_Functional {
 	}
 	
 	
-	//PART 1 - parser.add with shortcut
+	//PART 3 - parser.add with shortcut
 	
 	// Specification 1 - override 
 	
@@ -164,7 +165,7 @@ public class Task1_Functional {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	// PART 2 - parser.add without shortcut
+	// PART 4 - parser.add without shortcut
 	
 	@Test
     public void noShortcut_override() {
@@ -259,7 +260,7 @@ public class Task1_Functional {
     
     //////////////////////////////////////////////////////////////////////////////////
     
-    // PART 3 - parsing
+    // PART 5 - parsing
     
     // Specification 1 - -- used for name 
     
@@ -294,6 +295,118 @@ public class Task1_Functional {
         assertTrue(parser.getInteger("option") == parser.getInteger("opt"));
     }
     
+    // Specification 4 - quotation marks in value
+    
+    @Test
+    public void quotes() {
+    	parser.add("option1", "a", Parser.INTEGER);
+    	parser.add("option2", "b", Parser.INTEGER);
+    	parser.add("option3", "c", Parser.INTEGER);
+    	parser.parse("-a \"1\"");
+    	parser.parse("-b \'1\'");
+    	parser.parse("-c 1");
+    	assertTrue((parser.getInteger("a") == parser.getInteger("b")) && (parser.getInteger("a") == parser.getInteger("c")));
+    }
+    
+    // Specification 5 - decorative quotes
+    
+    @Test
+    public void decorative_quotes() {
+    	parser.add("option", Parser.STRING);
+    	parser.parse("--option='\"test\"");
+    	assertEquals(parser.getString("option"), "\"test\"");
+    }
+    
+    // Specification 6 - multiple allocations
+    
+    @Test
+    public void multiple_allocations() {
+    	parser.add("option", Parser.INTEGER);
+    	parser.parse("--option 1");
+    	assertEquals(parser.getInteger("option"), 1);
+    	parser.parse("--option 2");
+    	assertEquals(parser.getInteger("option"), 2);
+    }
+    
+    // Specification 7 - default values
+    
+    @Test
+    public void defaults() {
+    	parser.add("opt1","a", Parser.BOOLEAN);
+    	parser.add("opt2", "b", Parser.INTEGER);
+    	parser.add("opt3", "c", Parser.STRING);
+    	parser.add("opt4", "d", Parser.CHAR);
+    	
+    	parser.parse("--opt1");
+    	parser.parse("--opt2");
+    	parser.parse("--opt3");
+    	parser.parse("--opt4");
+    	assertTrue(parser.getBoolean("opt1"));
+    	assertEquals(parser.getInteger("opt2"), 0);
+    	assertEquals(parser.getString("opt3"), "");
+    	assertEquals(parser.getChar("opt4"), '\0');
+    	
+    	parser.parse("-a");
+    	parser.parse("-b");
+    	parser.parse("-c");
+    	parser.parse("-d");
+    	assertTrue(parser.getBoolean("a"));
+    	assertEquals(parser.getInteger("b"), 0);
+    	assertEquals(parser.getString("c"), "");
+    	assertEquals(parser.getChar("d"), '\0');
+    }
    
-	
+    // TODO Specification 8 - multiple use 
+    
+    @Test
+    public void multiple_times() {
+    	parser.add("input", Parser.INTEGER);
+    	parser.add("output", Parser.INTEGER);
+    	parser.parse("--input 1 --output 2");
+    	assertEquals(parser.getInteger("input"), 1);
+    	assertEquals(parser.getInteger("output"), 2);
+    }
+    
+    
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Part 6
+    
+    // Specification 1 - order of search
+    
+    @Test
+    public void order() {
+    	parser.add("o", Parser.INTEGER);
+    	parser.add("option", "o", Parser.INTEGER);
+    	parser.parse("-o 1");
+    	parser.parse("--o 2");
+    	assertEquals(parser.getInteger("o"), 2);
+    }
+    
+    @Test
+    public void default_values() {
+    	parser.add("opt1","a", Parser.BOOLEAN);
+    	parser.add("opt2", "b", Parser.INTEGER);
+    	parser.add("opt3", "c", Parser.STRING);
+    	parser.add("opt4", "d", Parser.CHAR);
+    	
+    	parser.parse("--opt1");
+    	parser.parse("--opt2");
+    	parser.parse("--opt3");
+    	parser.parse("--opt4");
+    	assertTrue(parser.getBoolean("opt1"));
+    	assertEquals(parser.getInteger("opt2"), 0);
+    	assertEquals(parser.getString("opt3"), "");
+    	assertEquals(parser.getChar("opt4"), '\0');
+    	
+    	parser.parse("-a");
+    	parser.parse("-b");
+    	parser.parse("-c");
+    	parser.parse("-d");
+    	assertTrue(parser.getBoolean("a"));
+    	assertEquals(parser.getInteger("b"), 0);
+    	assertEquals(parser.getString("c"), "");
+    	assertEquals(parser.getChar("d"), '\0');
+    }
+    
 }
