@@ -40,7 +40,6 @@ public class Parser {
 		    }
 			break;
 		case BOOLEAN:
-			System.out.println(getBoolean(option));
 			if (getBoolean(option) == false) {
 				result = 0;
 			} else {

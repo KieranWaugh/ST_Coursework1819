@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import org.junit.Test;
 
+import st.OptionMap;
 import st.Parser;
 
 import org.junit.Before;
@@ -418,12 +419,142 @@ public class Task2_Coverage {
     	assertEquals(parser.getInteger("a"), 0);
     }
     
+    
     @Test
-    public void false_bool() {
-    	parser.add("a", Parser.BOOLEAN);
-    	parser.parse("--a=false");
-    	//assertFalse(parser.getBoolean("a"));
+    public void char_zero() { // line 87 and 92 of Parser.java
+    	parser.add("option", Parser.CHAR);
+    	parser.parse("--option a");
+    	assertEquals(parser.getChar("option"), 'a');
     }
     
-
+    @Test
+    public void null_test() { // line 98 Parser.java 
+    	parser.add("option", Parser.STRING);
+    	assertEquals(parser.parse(null), -1);
+    }
+    
+    @Test 
+    public void zero_length() {// line 102 Parser.java 
+    	parser.add("option", Parser.STRING);
+    	assertEquals(parser.parse(""), -2);
+    }
+    
+    @Test
+    public void not_hyphen() { // 121 Parser.java 
+    	parser.add("option", Parser.STRING);
+      	assertEquals(parser.parse("abc"), -3);
+    }
+    
+    @Test
+    public void string_space() {// 122 Parser.java
+    	parser.add("option", Parser.STRING);
+    	parser.parse("--option ' ' ");
+    	assertEquals(parser.getString("option"), " ");
+    }
+    
+    @Test
+    public void has_underscore() { // line 135 Parser.java 
+    	parser.add("opt_ion", Parser.STRING);
+    	parser.parse("--opt_ion a_b");
+    	assertEquals(parser.getString("opt_ion"), "a_b");
+    }
+    
+    @Test
+    public void spaceParse(){
+    	parser.add("option", Parser.STRING);
+    	parser.parse(" --option abc");
+    	assertEquals(parser.getString("option"), "abc");
+    }
+    
+    @Test
+    public void parser_toString() {
+    	parser.add("option", Parser.STRING);
+    	parser.parse("--option abc");
+    	assertEquals(parser.toString(), "OptionMap [options=\n	{name=option, shortcut=, type=3, value=abc}\n]");
+    }
+    
+    @Test
+    public void hyphen_space() {
+        parser.add("output",Parser.STRING); // creating output with shortcut o and string return 
+        parser.parse("--output -test"); // parsing a string
+        assertEquals(parser.getString("output"), ""); // testing if the string is being parse  
+    
+    }
+    
+    @Test
+    public void hyphen_nospace() {
+        parser.add("output",Parser.STRING); // creating output with shortcut o and string return 
+        parser.parse("--output=-test"); // parsing a string
+        assertEquals(parser.getString("output"), "-test"); // testing if the string is being parse  
+    
+    }
+    
+    @Test
+    public void case_boolean() {
+    	parser.add("option", Parser.BOOLEAN);
+    	parser.parse("--option false");
+    	assertEquals(parser.getInteger("option"),0);
+    }
+    
+    @Test
+    public void case_NotBoolean() {
+    	parser.add("option", Parser.BOOLEAN);
+    	parser.parse("--option abc");
+    	assertEquals(parser.getInteger("option"),1);
+    }
+    
+    @Test
+    public void case_char() {
+    	parser.add("opt", Parser.CHAR);
+    	parser.parse("--opt a");
+    	assertEquals(parser.getInteger("opt"),97);
+    }
+    
+    @Test
+    public void case_string() {
+    	parser.add("opt", Parser.STRING);
+    	parser.parse("--opt abc");
+    	assertEquals(parser.getInteger("opt"),0);
+    }
+    
+    @Test
+    public void case_string_digit() {
+    	parser.add("opt", Parser.STRING);
+    	parser.parse("--opt 123");
+    	assertEquals(parser.getInteger("opt"),123);
+    }
+    
+    @Test
+    public void case_default() {
+    	assertEquals(parser.getInteger(""), 0);
+    }
+    
+    // optionMap
+    
+    
+    @Test (expected = RuntimeException.class)
+    public void null_option() {
+    	parser.add(null, Parser.INTEGER);
+    }
+    
+    @Test (expected = RuntimeException.class)
+    public void empty_option() {
+    	parser.add("", Parser.INTEGER);
+    }
+    
+    @Test (expected = RuntimeException.class)
+    public void null_shortcut() {
+    	parser.add("option",null, Parser.INTEGER);
+    }
+    
+    @Test (expected = RuntimeException.class)
+    public void over_type() {
+    	parser.add("option", 10);
+    }
+    
+    @Test (expected = RuntimeException.class)
+    public void under_type() {
+    	parser.add("option", 0);
+    }
+    
 }
