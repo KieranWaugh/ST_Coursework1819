@@ -227,20 +227,104 @@ public class Parser {
 	    List<String> values = Arrays.asList(optionValue.split("[^-\\d]")); // splitting the string on everything but numbers and -
 	    
 	    // now check for range values and convert to integer types 
-	    
-	    int firstNumber = 0;
-	    
-	    for (String number : values) {
-	        int tmp = firstNumber;
-	        try {
-	            firstNumber= Integer.parseInt(number);
-	        }catch (Exception e) {
-	            String val = number;
-	            
-	        }
-	    }
-	    
-	    return new ArrayList<>();
+
+        for (String string : values) {
+            try {
+                returnList.add(Integer.parseInt(string));  
+            }catch (Exception e) {
+                
+                if (string.endsWith("-")) {
+                    return returnList;
+                    
+                }
+                
+                if (!string.contains("--")) {
+                    
+                    if (string.startsWith("-")) { // only first value can be neg,  
+                        String[] val = string.split("-");
+                        val[1] = "-" + val[1];
+                        int one = Integer.parseInt(val[1]);
+                        int two = Integer.parseInt(val[2]);
+                        for (int i = one; i <= two; i++) {
+                            returnList.add(i);
+                        }
+                    }else {
+                        String[] val = string.split("-");
+                        int one = Integer.parseInt(val[0]);
+                        int two = Integer.parseInt(val[1]);
+                        for (int i = one; i <= two; i++) {
+                            returnList.add(i);
+                        }
+                    }
+                    
+                }else {
+                    char[] chars = string.toCharArray();
+
+                    ArrayList<Integer> rangeArray = new ArrayList<Integer>();
+                    String currentVal = "";
+                    for (int i = 0; i < chars.length; i++) {
+                        
+                        
+                        if (Character.isDigit(chars[i])) {
+                            currentVal = currentVal + chars[i];
+                        }
+                        
+                        if (chars[i] == '-' ) { // negative first value 
+                            
+                            if (i == 0) { // first elem is negative
+                                currentVal = "-";
+                                continue;
+                                
+                            }
+                            
+                            if (Character.isDigit(chars[i+1])) { // non negative range
+                                if (currentVal != "") {
+                                    rangeArray.add(Integer.parseInt(currentVal));
+                                }
+                                String restOfNum = "";
+                                for (int j = i +1; j < chars.length; j++) {
+                                    restOfNum =  restOfNum + chars[j];
+                                }
+                                rangeArray.add((Integer.parseInt(restOfNum)));
+                                i = chars.length - 1;
+                            }
+                            
+                            if (chars[i+1] == '-') { // negative range 
+                                rangeArray.add(Integer.parseInt(currentVal)); // set first range value 
+                                currentVal = "";
+                                i = i+1;
+                            }
+                            currentVal = currentVal + "-";
+                        }
+                        
+                        if (i == chars.length - 1) {                       
+                            rangeArray.add(Integer.parseInt(currentVal));
+                            if (rangeArray.get(0) > rangeArray.get(1)) {
+                                for (int k = rangeArray.get(0); k >= rangeArray.get(1); k--) {
+                                    returnList.add(k);
+                                }
+                            }
+                            if (rangeArray.get(0) < rangeArray.get(1)) {
+                                for (int k = rangeArray.get(0); k <= rangeArray.get(1); k++) {
+                                    returnList.add(k);
+                                }
+                            }
+                        
+                }
+                
+                }
+                    
+                  
+                    
+                
+                }
+                
+                
+                
+            
+            }
+        }
+        return returnList;
 	    
 	    
 	}

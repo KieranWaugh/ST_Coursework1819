@@ -2,9 +2,6 @@ import static org.junit.Assert.*;
 
 
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.omg.IOP.MultipleComponentProfileHelper;
-
 import st.Parser;
 
 import org.junit.Before;
