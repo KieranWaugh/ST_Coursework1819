@@ -1,6 +1,12 @@
 package st;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parser {
 	public static final int INTEGER = 1;
@@ -203,6 +209,40 @@ public class Parser {
 	@Override
 	public String toString() {
 		return optionMap.toString();
+	}
+	
+	
+	// Task 3 implementation 
+	
+	public List<Integer> getIntegerList(String option){
+	    ArrayList<Integer> returnList= new ArrayList<Integer>(); // return list
+	   
+	    
+	    String optionValue = optionMap.getValue(option); // value from the option
+	    
+	    if (optionValue.equals("")) { // no value return empty list 
+	        return returnList;
+	    }
+	    
+	    List<String> values = Arrays.asList(optionValue.split("[^-\\d]")); // splitting the string on everything but numbers and -
+	    
+	    // now check for range values and convert to integer types 
+	    
+	    int firstNumber = 0;
+	    
+	    for (String number : values) {
+	        int tmp = firstNumber;
+	        try {
+	            firstNumber= Integer.parseInt(number);
+	        }catch (Exception e) {
+	            String val = number;
+	            
+	        }
+	    }
+	    
+	    return new ArrayList<>();
+	    
+	    
 	}
 
 }
