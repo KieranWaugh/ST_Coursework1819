@@ -25,10 +25,10 @@ public class Task1_Functional {
 	public void override() {
 		parser.add("output", "o", Parser.STRING); // creating output with shortcut o and string return 
 		parser.parse("-o test"); // parsing a string
-		assertEquals(parser.getString("o"), "test"); // testing if the string is being parsed
+		assertEquals("test", parser.getString("o")); // testing if the string is being parsed
 		
 		parser.add("output", "o", Parser.INTEGER); // overriding output with integer parse 
-		assertEquals(parser.getInteger("o"), 0); // testing for override 	
+		assertEquals(0, parser.getInteger("o")); // testing for override 	
 	
 	}
 	
@@ -72,8 +72,8 @@ public class Task1_Functional {
 	    parser.add("a", "shortcut", Parser.INTEGER);
 	    parser.parse("--a string");
 	    parser.parse("--A string");
-	    assertEquals(parser.getInteger("a"), 0);
-	    assertEquals(parser.getString("A"), "string");
+	    assertEquals(0, parser.getInteger("a"));
+	    assertEquals("string", parser.getString("A"));
 	}
 	
 	@Test
@@ -83,7 +83,7 @@ public class Task1_Functional {
 	    parser.parse("-a string");
 	    parser.parse("-A string");
 	    assertEquals(parser.getInteger("A"), 0);
-	    assertEquals(parser.getString("a"), "string");
+	    assertEquals("string", parser.getString("a"));
 	}
 	
 	@Test
@@ -171,7 +171,7 @@ public class Task1_Functional {
         assertEquals(parser.getString("output"), "test"); // testing if the string is being parsed
         
         parser.add("output", Parser.INTEGER); // overriding output with integer parse 
-        assertEquals(parser.getInteger("output"), 0); // testing for override   
+        assertEquals(0, parser.getInteger("output")); // testing for override   
     
     }
     
@@ -197,8 +197,8 @@ public class Task1_Functional {
         parser.add("a",Parser.INTEGER);
         parser.parse("--a string");
         parser.parse("--A string");
-        assertEquals(parser.getInteger("a"), 0);
-        assertEquals(parser.getString("A"), "string");
+        assertEquals(0, parser.getInteger("a"));
+        assertEquals("string", parser.getString("A"));
     }
      
     @Test
@@ -267,7 +267,7 @@ public class Task1_Functional {
         parser.add("n", "name", Parser.INTEGER);
         parser.parse("--name 5");
         parser.parse("-name 10");
-        assertEquals(parser.getInteger("name"), 5);
+        assertEquals(5, parser.getInteger("name"));
     }
     
     // Specification 2 - - used for shortcut
@@ -278,7 +278,7 @@ public class Task1_Functional {
         parser.add("n", "name", Parser.INTEGER);
         parser.parse("--n 5");
         parser.parse("-n 10");
-        assertEquals(parser.getInteger("name"), 10);
+        assertEquals(10, parser.getInteger("name"));
     }
     
     // Specification 3 - using = or space 
@@ -311,7 +311,7 @@ public class Task1_Functional {
     public void decorative_quotes() {
     	parser.add("option", Parser.STRING);
     	parser.parse("--option='\"test\"");
-    	assertEquals(parser.getString("option"), "\"test\"");
+    	assertEquals("\"test\"", parser.getString("option"));
     }
     
     // Specification 6 - multiple allocations
@@ -320,9 +320,9 @@ public class Task1_Functional {
     public void multiple_allocations() {
     	parser.add("option", Parser.INTEGER);
     	parser.parse("--option 1");
-    	assertEquals(parser.getInteger("option"), 1);
+    	assertEquals(1, parser.getInteger("option"));
     	parser.parse("--option 2");
-    	assertEquals(parser.getInteger("option"), 2);
+    	assertEquals(2, parser.getInteger("option"));
     }
     
     // Specification 7 - default values
@@ -339,29 +339,29 @@ public class Task1_Functional {
     	parser.parse("--opt3");
     	parser.parse("--opt4");
     	assertTrue(parser.getBoolean("opt1"));
-    	assertEquals(parser.getInteger("opt2"), 0);
-    	assertEquals(parser.getString("opt3"), "");
-    	assertEquals(parser.getChar("opt4"), '\0');
+    	assertEquals(0, parser.getInteger("opt2"));
+    	assertEquals("", parser.getString("opt3"));
+    	assertEquals('\0', parser.getChar("opt4"));
     	
     	parser.parse("-a");
     	parser.parse("-b");
     	parser.parse("-c");
     	parser.parse("-d");
     	assertTrue(parser.getBoolean("a"));
-    	assertEquals(parser.getInteger("b"), 0);
-    	assertEquals(parser.getString("c"), "");
-    	assertEquals(parser.getChar("d"), '\0');
+    	assertEquals(0, parser.getInteger("b"));
+    	assertEquals("", parser.getString("c"));
+    	assertEquals('\0', parser.getChar("d"));
     }
    
-    // TODO Specification 8 - multiple use 
+    // Specification 8 - multiple use 
     
     @Test
     public void multiple_times() {
     	parser.add("input", Parser.INTEGER);
     	parser.add("output", Parser.INTEGER);
     	parser.parse("--input 1 --output 2");
-    	assertEquals(parser.getInteger("input"), 1);
-    	assertEquals(parser.getInteger("output"), 2);
+    	assertEquals(1, parser.getInteger("input"));
+    	assertEquals(2, parser.getInteger("output"));
     }
     
     
@@ -377,33 +377,33 @@ public class Task1_Functional {
     	parser.add("option", "o", Parser.INTEGER);
     	parser.parse("-o 1");
     	parser.parse("--o 2");
-    	assertEquals(parser.getInteger("o"), 2);
+    	assertEquals(2, parser.getInteger("o"));
     }
     
     @Test
     public void default_values() {
-    	parser.add("opt1","a", Parser.BOOLEAN);
-    	parser.add("opt2", "b", Parser.INTEGER);
-    	parser.add("opt3", "c", Parser.STRING);
-    	parser.add("opt4", "d", Parser.CHAR);
-    	
-    	parser.parse("--opt1");
-    	parser.parse("--opt2");
-    	parser.parse("--opt3");
-    	parser.parse("--opt4");
-    	assertTrue(parser.getBoolean("opt1"));
-    	assertEquals(parser.getInteger("opt2"), 0);
-    	assertEquals(parser.getString("opt3"), "");
-    	assertEquals(parser.getChar("opt4"), '\0');
-    	
-    	parser.parse("-a");
-    	parser.parse("-b");
-    	parser.parse("-c");
-    	parser.parse("-d");
-    	assertTrue(parser.getBoolean("a"));
-    	assertEquals(parser.getInteger("b"), 0);
-    	assertEquals(parser.getString("c"), "");
-    	assertEquals(parser.getChar("d"), '\0');
+        parser.add("opt1","a", Parser.BOOLEAN);
+        parser.add("opt2", "b", Parser.INTEGER);
+        parser.add("opt3", "c", Parser.STRING);
+        parser.add("opt4", "d", Parser.CHAR);
+        
+        parser.parse("--opt1");
+        parser.parse("--opt2");
+        parser.parse("--opt3");
+        parser.parse("--opt4");
+        assertTrue(parser.getBoolean("opt1"));
+        assertEquals(0, parser.getInteger("opt2"));
+        assertEquals("", parser.getString("opt3"));
+        assertEquals('\0', parser.getChar("opt4"));
+        
+        parser.parse("-a");
+        parser.parse("-b");
+        parser.parse("-c");
+        parser.parse("-d");
+        assertTrue(parser.getBoolean("a"));
+        assertEquals(0, parser.getInteger("b"));
+        assertEquals("", parser.getString("c"));
+        assertEquals('\0', parser.getChar("d"));
     }
     
 }
